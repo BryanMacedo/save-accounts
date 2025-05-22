@@ -1,6 +1,7 @@
 module org.bryanmacedo.saveaccounts {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens org.bryanmacedo.saveaccounts to javafx.fxml;
