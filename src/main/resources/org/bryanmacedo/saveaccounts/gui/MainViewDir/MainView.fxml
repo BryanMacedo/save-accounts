@@ -12,7 +12,7 @@
    <center>
       <ScrollPane hbarPolicy="NEVER">
          <content>
-            <VBox prefHeight="485.0" prefWidth="319.0">
+            <VBox fx:id="vbAccordion" prefHeight="485.0" prefWidth="319.0">
                <children>
                   <Accordion fx:id="accordionMain" />
                </children>

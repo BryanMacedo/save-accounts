@@ -2,6 +2,7 @@ package guiClasses.Controllers.MainViewDir;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,9 @@ import java.util.ResourceBundle;
 public class MainViewController implements Initializable {
     @FXML
     private Accordion accordionMain;
+
+    @FXML
+    private VBox vbAccordion;
 
     @FXML
     private void onBtClick(Label lb){
@@ -86,7 +90,16 @@ public class MainViewController implements Initializable {
             newTitledPane.setContent(newVbox);
 
             accordionMain.getPanes().add(newTitledPane);
+        }
 
+        boolean isEmpty = accordionMain.getPanes().isEmpty();
+
+        Label lbWarning = new Label();
+        lbWarning.setText("Sem dados.");
+
+        if (isEmpty){
+            vbAccordion.setAlignment(Pos.CENTER);
+            vbAccordion.getChildren().add(lbWarning);
         }
 
 
