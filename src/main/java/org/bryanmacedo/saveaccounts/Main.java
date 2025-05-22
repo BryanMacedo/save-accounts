@@ -7,11 +7,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader
-                (HelloApplication.class.getResource("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
+                (Main.class.getResource("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("SAVE ACCOUNTS");
         stage.setScene(scene);

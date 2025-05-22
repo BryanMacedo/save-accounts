@@ -2,38 +2,34 @@ package guiClasses.Controllers.MainViewDir;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import model.entities.Account;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainViewController implements Initializable {
     @FXML
-    private Button btCopyLogin;
+    private Accordion accordionMain;
 
     @FXML
-    private Button btCopyPassword;
-
-    @FXML
-    private Label lbLogin;
-
-    @FXML
-    private Label lbPassword;
-
-    @FXML
-    private void onBtCopyLoginOn(){
-        copyText(lbLogin);
+    private void onBtClick(Label lb){
+        copyText(lb);
     }
 
-    @FXML
-    private void onBtCopyPasswordOn(){
-        copyText(lbPassword);
-    }
 
-    private void copyText(Label lb){
+    private void copyText(Label lb) {
         String txtLogin = lb.getText();
 
         ClipboardContent content = new ClipboardContent();
@@ -43,9 +39,56 @@ public class MainViewController implements Initializable {
     }
 
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // quando tiver salvando os dados no db criar os objs com eles.
+        Account account01 = new Account("Netlix", "Bryansm12", "123456");
+        Account account02 = new Account("HBO", "HBOBryansm12", "HBO123456");
+        Account account03 = new Account("Valorant", "vlrBryansm12", "vlr123456");
+
+        List<Account> accountList = new ArrayList<>(Arrays.asList(account01, account02, account03));
+
+        for (Account account : accountList) {
+            TitledPane newTitledPane = new TitledPane();
+
+            Label labelLogintxt = new Label();
+            Label labelPasswordtxt = new Label();
+
+            Label labelLoginContent = new Label();
+            Label labelPasswordContent = new Label();
+
+            VBox newVbox = new VBox();
+
+            Button bt01 = new Button();
+            Button bt02 = new Button();
+
+            bt01.setOnAction(e -> onBtClick(labelLoginContent));
+            bt02.setOnAction(e -> onBtClick(labelPasswordContent));
+
+            HBox hBox01 = new HBox();
+            HBox hBox02 = new HBox();
+
+            labelLogintxt.setText("Login: ");
+            labelPasswordtxt.setText("Senha: ");
+
+            labelLoginContent.setText(account.getLogin());
+            labelPasswordContent.setText(account.getPassword());
+
+            bt01.setText("copiar");
+            bt02.setText("copiar");
+
+            hBox01.getChildren().addAll(labelLogintxt, labelLoginContent, bt01);
+            hBox02.getChildren().addAll(labelPasswordtxt, labelPasswordContent, bt02);
+
+            newVbox.getChildren().addAll(hBox01, hBox02);
+
+            newTitledPane.setText(account.getNameTitle());
+            newTitledPane.setContent(newVbox);
+
+            accordionMain.getPanes().add(newTitledPane);
+
+        }
+
 
     }
 }
