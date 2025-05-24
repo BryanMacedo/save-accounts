@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
@@ -109,7 +111,7 @@ public class MainViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        if (rowsAffected > 0){
+        if (rowsAffected > 0) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource
                         ("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
@@ -146,7 +148,7 @@ public class MainViewController implements Initializable {
         PreparedStatement st = null;
         ResultSet rs = null;
 
-        try{
+        try {
             conn = DB_connection.getConnection();
             st = conn.prepareStatement("SELECT * FROM Accounts");
             rs = st.executeQuery();
@@ -154,12 +156,11 @@ public class MainViewController implements Initializable {
             while (rs.next()) {
                 Account ac = new Account
                         (rs.getString("NameTitle"), rs.getString("Login"), rs.getString("Password"));
-            accountList.add(ac);
+                accountList.add(ac);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
 
 
         for (Account account : accountList) {
@@ -189,8 +190,21 @@ public class MainViewController implements Initializable {
             labelLoginContent.setText(account.getLogin());
             labelPasswordContent.setText(account.getPassword());
 
-            bt01.setText("copiar");
-            bt02.setText("copiar");
+            Image copyIcon = new Image(getClass().getResourceAsStream("/imgs/ic_copy.png"));
+
+
+            ImageView copyIconView01 = new ImageView(copyIcon);
+            copyIconView01.setFitWidth(20);
+            copyIconView01.setFitHeight(20);
+            copyIconView01.setPreserveRatio(true);
+
+            ImageView copyIconView02 = new ImageView(copyIcon); // Nova instância
+            copyIconView02.setFitWidth(20);
+            copyIconView02.setFitHeight(20);
+            copyIconView02.setPreserveRatio(true);
+
+            bt01.setGraphic(copyIconView01);
+            bt02.setGraphic(copyIconView02);
 
             hBox01.getChildren().addAll(labelLogintxt, labelLoginContent, bt01);
             hBox02.getChildren().addAll(labelPasswordtxt, labelPasswordContent, bt02);
