@@ -1,9 +1,9 @@
 package guiClasses.Controllers.MainViewDir;
 
+import DB.DB_connection;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,8 +16,11 @@ import model.entities.Account;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -87,6 +90,37 @@ public class MainViewController implements Initializable {
     private void onBtAddAccountClick(Account ac) {
         System.out.println(ac);
         // adicionar ao db
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try {
+            conn = DB_connection.getConnection();
+            String sql = "INSERT INTO Accounts (NameTitle, Login, Password) VALUES (?, ?, ?)";
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, ac.getNameTitle());
+            ps.setString(2, ac.getLogin());
+            ps.setString(3, ac.getPassword());
+
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (rowsAffected > 0){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource
+                        ("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
+                Parent root = loader.load();
+                Scene scene = btAdd.getScene();
+                scene.setRoot(root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @FXML
@@ -107,12 +141,26 @@ public class MainViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // quando tiver salvando os dados no db criar os objs com eles.
-        Account account01 = new Account("Netlix", "Bryansm12", "123456");
-        Account account02 = new Account("HBO", "HBOBryansm12", "HBO123456");
-        Account account03 = new Account("Valorant", "vlrBryansm12", "vlr123456");
+        List<Account> accountList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
 
-        List<Account> accountList = new ArrayList<>(Arrays.asList(account01, account02, account03));
+        try{
+            conn = DB_connection.getConnection();
+            st = conn.prepareStatement("SELECT * FROM Accounts");
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Account ac = new Account
+                        (rs.getString("NameTitle"), rs.getString("Login"), rs.getString("Password"));
+            accountList.add(ac);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
 
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
@@ -137,6 +185,7 @@ public class MainViewController implements Initializable {
             labelLogintxt.setText("Login: ");
             labelPasswordtxt.setText("Senha: ");
 
+            newTitledPane.setText(account.getNameTitle());
             labelLoginContent.setText(account.getLogin());
             labelPasswordContent.setText(account.getPassword());
 
