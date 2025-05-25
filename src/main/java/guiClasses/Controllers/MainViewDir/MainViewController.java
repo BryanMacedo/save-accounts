@@ -13,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.entities.Account;
 
@@ -43,6 +45,9 @@ public class MainViewController implements Initializable {
 
     @FXML
     private Button btAdd;
+
+    @FXML
+    private Button btEdit;
 
 
     @FXML
@@ -76,6 +81,7 @@ public class MainViewController implements Initializable {
             vbTop.getChildren().addAll(hBoxTite, hBoxLogin, hBoxPassword, btAddAccount);
 
             btAddAccount.setOnAction(e -> {
+                // limitar o tamanho do titulo depois
                 Account ac = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
                 onBtAddAccountClick(ac);
             });
@@ -85,13 +91,10 @@ public class MainViewController implements Initializable {
             vbTop.getChildren().removeAll(hBoxTite, hBoxLogin, hBoxPassword, btAddAccount);
             aux = 0;
         }
-
-
     }
 
     private void onBtAddAccountClick(Account ac) {
         System.out.println(ac);
-        // adicionar ao db
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -186,7 +189,16 @@ public class MainViewController implements Initializable {
             labelLogintxt.setText("Login: ");
             labelPasswordtxt.setText("Senha: ");
 
-            newTitledPane.setText(account.getNameTitle());
+            HBox hBoxTitleArea = new HBox();
+            Label lbNameTile = new Label(account.getNameTitle());
+            Button btEdit = new Button("Editar");
+
+            Region spacer = new Region();
+            spacer.setPrefWidth(20);
+
+            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit);
+
+            newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
             labelPasswordContent.setText(account.getPassword());
 
@@ -211,7 +223,7 @@ public class MainViewController implements Initializable {
 
             newVbox.getChildren().addAll(hBox01, hBox02);
 
-            newTitledPane.setText(account.getNameTitle());
+            //newTitledPane.setText(account.getNameTitle());
             newTitledPane.setContent(newVbox);
 
             accordionMain.getPanes().add(newTitledPane);
