@@ -1,10 +1,13 @@
 package guiClasses.Controllers.MainViewDir;
 
 import DB.DB_connection;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -24,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -49,45 +53,57 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void onBtAddClick() {
-        if (auxAdd == 0) {
-            Label lbTitleText = new Label("Titulo ");
-            TextField tfTitle = new TextField();
-            tfTitle.setPromptText("ex: Netflix");
+        Dialog<Account> dialog = new Dialog<>();
+        dialog.setTitle("Adicionar Conta");
 
-            Label lbLoginText = new Label("Login ");
-            TextField tfLogin = new TextField();
-            tfLogin.setPromptText("ex: seuNome07");
+        ButtonType btAdd = new ButtonType("Adicionar", ButtonBar.ButtonData.OK_DONE);
 
-            Label lbPasswordText = new Label("Senha ");
-            TextField tfPassword = new TextField();
-            tfPassword.setPromptText("ex: 132mdsj2@");
+        dialog.getDialogPane().getButtonTypes().addAll(btAdd);
 
-            hBoxTite.getChildren().setAll(lbTitleText, tfTitle);
-            hBoxLogin.getChildren().setAll(lbLoginText, tfLogin);
-            hBoxPassword.getChildren().setAll(lbPasswordText, tfPassword);
+        // Campos do formulário
+        TextField tfTitle = new TextField();
+        tfTitle.setPromptText("Título");
 
+        TextField tfLogin = new TextField();
+        tfLogin.setPromptText("Login");
 
-            if (btAddAccount == null) {
-                btAddAccount = new Button();
-                btAddAccount.setText("Adicionar conta");
-            }
+        TextField tfPassword = new TextField();
+        tfPassword.setPromptText("Senha");
 
-            vbTop.setAlignment(Pos.CENTER);
+        VBox content = new VBox(10);
 
+        HBox hBoxTitle = new HBox(10);
+        HBox hBoxLogin = new HBox(10);
+        HBox hBoxPassword = new HBox(10);
 
-            vbTop.getChildren().addAll(hBoxTite, hBoxLogin, hBoxPassword, btAddAccount);
+        hBoxTitle.getChildren().addAll(new Label("Título:"), tfTitle);
+        hBoxLogin.getChildren().addAll(new Label("Login:"), tfLogin);
+        hBoxPassword.getChildren().addAll(new Label("Senha:"), tfPassword);
 
-            btAddAccount.setOnAction(e -> {
-                // limitar o tamanho do titulo depois
+        List<HBox> hBoxList = new ArrayList<>(Arrays.asList(hBoxTitle, hBoxLogin, hBoxPassword));
+
+        for (HBox hBox : hBoxList) {
+            hBox.setAlignment(Pos.CENTER);
+        }
+
+        content.getChildren().addAll(
+                hBoxTitle,
+                hBoxLogin,
+                hBoxPassword
+        );
+
+        dialog.getDialogPane().setContent(content);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == btAdd) {
+                if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty()) return null;
                 Account ac = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
                 onBtAddAccountClick(ac);
-            });
+            }
+            return null;
+        });
 
-            auxAdd = 1;
-        } else {
-            vbTop.getChildren().removeAll(hBoxTite, hBoxLogin, hBoxPassword, btAddAccount);
-            auxAdd = 0;
-        }
+        dialog.showAndWait();
     }
 
     private void onBtAddAccountClick(Account ac) {
@@ -116,7 +132,7 @@ public class MainViewController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource
                         ("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
                 Parent root = loader.load();
-                Scene scene = btAdd.getScene();
+                Scene scene = accordionMain.getScene();
                 scene.setRoot(root);
             } catch (IOException e) {
                 e.printStackTrace();
