@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.entities.Account;
@@ -29,11 +28,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainViewController implements Initializable {
-    private int aux = 0;
+    private int auxAdd = 0;
     private HBox hBoxTite = new HBox();
     private HBox hBoxLogin = new HBox();
     private HBox hBoxPassword = new HBox();
     private Button btAddAccount;
+
     @FXML
     private Accordion accordionMain;
 
@@ -46,13 +46,10 @@ public class MainViewController implements Initializable {
     @FXML
     private Button btAdd;
 
-    @FXML
-    private Button btEdit;
-
 
     @FXML
     private void onBtAddClick() {
-        if (aux == 0) {
+        if (auxAdd == 0) {
             Label lbTitleText = new Label("Titulo ");
             TextField tfTitle = new TextField();
             tfTitle.setPromptText("ex: Netflix");
@@ -86,10 +83,10 @@ public class MainViewController implements Initializable {
                 onBtAddAccountClick(ac);
             });
 
-            aux = 1;
+            auxAdd = 1;
         } else {
             vbTop.getChildren().removeAll(hBoxTite, hBoxLogin, hBoxPassword, btAddAccount);
-            aux = 0;
+            auxAdd = 0;
         }
     }
 
@@ -190,6 +187,7 @@ public class MainViewController implements Initializable {
             labelPasswordtxt.setText("Senha: ");
 
             HBox hBoxTitleArea = new HBox();
+            hBoxTitleArea.setAlignment(Pos.CENTER);
             Label lbNameTile = new Label(account.getNameTitle());
             Button btEdit = new Button("Editar");
 
