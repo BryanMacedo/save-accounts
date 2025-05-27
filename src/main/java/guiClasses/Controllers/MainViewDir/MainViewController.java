@@ -117,6 +117,29 @@ public class MainViewController implements Initializable {
         dialog.showAndWait();
     }
 
+    private void onBtDeleteAccountClick(Account ac){
+        // depois adicionar um aviso ao antes de deletar.
+        System.out.println(ac);
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try {
+            conn = DB_connection.getConnection();
+            String sql = "DELETE FROM Accounts WHERE NameTitle = ?";
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, ac.getNameTitle());
+
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (rowsAffected > 0) reloadView();
+    }
+
     private void onBtEditAccountClick(Account oldAc, Account newAc) {
         System.out.println(oldAc);
         System.out.println(newAc);
@@ -144,9 +167,8 @@ public class MainViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        if (rowsAffected > 0){
-            reloadView();
-        }
+        if (rowsAffected > 0) reloadView();
+
     }
 
     private void onBtAddAccountClick(Account ac) {
@@ -170,10 +192,7 @@ public class MainViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        if (rowsAffected > 0) {
-            reloadView();
-        }
-
+        if (rowsAffected > 0) reloadView();
     }
 
     @FXML
@@ -242,6 +261,7 @@ public class MainViewController implements Initializable {
             hBoxTitleArea.setAlignment(Pos.CENTER);
             Label lbNameTile = new Label(account.getNameTitle());
             Button btEdit = new Button("Editar");
+            Button btDelete = new Button("Deletar");
 
             btEdit.setOnAction(e -> {
                 System.out.println(account);
@@ -306,10 +326,15 @@ public class MainViewController implements Initializable {
                 dialog.showAndWait();
             });
 
+            btDelete.setOnAction(e ->{
+                System.out.println(account);
+                onBtDeleteAccountClick(account);
+            });
+
             Region spacer = new Region();
             spacer.setPrefWidth(20);
 
-            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit);
+            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit,btDelete);
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
