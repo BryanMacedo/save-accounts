@@ -26,10 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainViewController implements Initializable {
     private int auxAdd = 0;
@@ -216,6 +213,7 @@ public class MainViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
+        Collections.sort(accountList, Comparator.comparing(Account::getNameTitle));
 
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
