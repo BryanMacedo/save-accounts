@@ -50,12 +50,25 @@ public class MainViewController implements Initializable {
     @FXML
     private Button btAdd;
 
+    private void reloadView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource
+                    ("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
+            Parent root = loader.load();
+            Scene scene = accordionMain.getScene();
+            scene.setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void onBtAddClick() {
         Dialog<Account> dialog = new Dialog<>();
         dialog.setTitle("Adicionar Conta");
 
+        // tentar trocar esta parte por um hbox com um button
         ButtonType btAdd = new ButtonType("Adicionar", ButtonBar.ButtonData.OK_DONE);
 
         dialog.getDialogPane().getButtonTypes().addAll(btAdd);
@@ -96,7 +109,8 @@ public class MainViewController implements Initializable {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == btAdd) {
-                if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty()) return null;
+                if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
+                    return null;
                 Account ac = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
                 onBtAddAccountClick(ac);
             }
@@ -104,6 +118,38 @@ public class MainViewController implements Initializable {
         });
 
         dialog.showAndWait();
+    }
+
+    private void onBtEditAccountClick(Account oldAc, Account newAc) {
+        System.out.println(oldAc);
+        System.out.println(newAc);
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rowsAffected = 0;
+
+        try {
+            conn = DB_connection.getConnection();
+            String sql = "UPDATE Accounts SET NameTitle = ?, Login = ?, Password = ? WHERE NameTitle = ? AND Login = ? AND Password = ?";
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1,newAc.getNameTitle());
+            ps.setString(2,newAc.getLogin());
+            ps.setString(3,newAc.getPassword());
+
+            ps.setString(4,oldAc.getNameTitle());
+            ps.setString(5,oldAc.getLogin());
+            ps.setString(6,oldAc.getPassword());
+
+            rowsAffected = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (rowsAffected > 0){
+            reloadView();
+        }
     }
 
     private void onBtAddAccountClick(Account ac) {
@@ -128,15 +174,7 @@ public class MainViewController implements Initializable {
         }
 
         if (rowsAffected > 0) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource
-                        ("/org/bryanmacedo/saveaccounts/gui/MainViewDir/MainView.fxml"));
-                Parent root = loader.load();
-                Scene scene = accordionMain.getScene();
-                scene.setRoot(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            reloadView();
         }
 
     }
@@ -206,6 +244,69 @@ public class MainViewController implements Initializable {
             hBoxTitleArea.setAlignment(Pos.CENTER);
             Label lbNameTile = new Label(account.getNameTitle());
             Button btEdit = new Button("Editar");
+
+            btEdit.setOnAction(e -> {
+                System.out.println(account);
+                //editat o account no db
+
+                Dialog<Account> dialog = new Dialog<>();
+                dialog.setTitle("Editar Conta");
+
+                // tentar trocar esta parte por um hbox com um button
+                ButtonType btAdd = new ButtonType("Editar", ButtonBar.ButtonData.OK_DONE);
+
+                dialog.getDialogPane().getButtonTypes().addAll(btAdd);
+
+                // Campos do formulário
+                TextField tfTitle = new TextField();
+                tfTitle.setPromptText("Título");
+                tfTitle.setText(account.getNameTitle());
+
+                TextField tfLogin = new TextField();
+                tfLogin.setPromptText("Login");
+                tfLogin.setText(account.getLogin());
+
+                TextField tfPassword = new TextField();
+                tfPassword.setPromptText("Senha");
+                tfPassword.setText(account.getPassword());
+
+                VBox content = new VBox(10);
+
+                HBox hBoxTitle = new HBox(10);
+                HBox hBoxLogin = new HBox(10);
+                HBox hBoxPassword = new HBox(10);
+
+                hBoxTitle.getChildren().addAll(new Label("Título:"), tfTitle);
+                hBoxLogin.getChildren().addAll(new Label("Login:"), tfLogin);
+                hBoxPassword.getChildren().addAll(new Label("Senha:"), tfPassword);
+
+                List<HBox> hBoxList = new ArrayList<>(Arrays.asList(hBoxTitle, hBoxLogin, hBoxPassword));
+
+                for (HBox hBox : hBoxList) {
+                    hBox.setAlignment(Pos.CENTER);
+                }
+
+                content.getChildren().addAll(
+                        hBoxTitle,
+                        hBoxLogin,
+                        hBoxPassword
+                );
+
+                dialog.getDialogPane().setContent(content);
+
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == btAdd) {
+                        if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
+                            return null;
+                        Account newAc = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
+                        //onBtAddAccountClick(ac);
+                        onBtEditAccountClick(account, newAc);
+                    }
+                    return null;
+                });
+
+                dialog.showAndWait();
+            });
 
             Region spacer = new Region();
             spacer.setPrefWidth(20);
