@@ -232,8 +232,8 @@ public class MainViewController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        Collections.sort(accountList, Comparator.comparing(Account::getNameTitle));
-
+        Collections.sort(accountList, Comparator.comparing(a -> a.getNameTitle().toLowerCase()));
+        
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
 
