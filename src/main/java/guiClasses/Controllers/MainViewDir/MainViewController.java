@@ -119,25 +119,38 @@ public class MainViewController implements Initializable {
 
     private void onBtDeleteAccountClick(Account ac){
         // depois adicionar um aviso ao antes de deletar.
-        System.out.println(ac);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Excluir conta");
+        alert.setHeaderText("Confirmar Exclusão");
+        alert.setContentText("Tem certeza que deseja excluir a conta \"" + ac.getNameTitle() + "\"?");
 
-        Connection conn = null;
-        PreparedStatement ps = null;
-        int rowsAffected = 0;
+        ButtonType btYes = new ButtonType("Sim");
+        ButtonType btNo = new ButtonType("Não");
+        alert.getButtonTypes().setAll(btYes, btNo);
 
-        try {
-            conn = DB_connection.getConnection();
-            String sql = "DELETE FROM Accounts WHERE NameTitle = ?";
-            ps = conn.prepareStatement(sql);
+        Optional<ButtonType> result = alert.showAndWait();
 
-            ps.setString(1, ac.getNameTitle());
+        if (result.isPresent() && result.get() == btYes){
+            System.out.println(ac);
 
-            rowsAffected = ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Connection conn = null;
+            PreparedStatement ps = null;
+            int rowsAffected = 0;
+
+            try {
+                conn = DB_connection.getConnection();
+                String sql = "DELETE FROM Accounts WHERE NameTitle = ?";
+                ps = conn.prepareStatement(sql);
+
+                ps.setString(1, ac.getNameTitle());
+
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (rowsAffected > 0) reloadView();
         }
-
-        if (rowsAffected > 0) reloadView();
     }
 
     private void onBtEditAccountClick(Account oldAc, Account newAc) {
