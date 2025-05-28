@@ -117,7 +117,7 @@ public class MainViewController implements Initializable {
         dialog.showAndWait();
     }
 
-    private void onBtDeleteAccountClick(Account ac){
+    private void onBtDeleteAccountClick(Account ac) {
         // depois adicionar um aviso ao antes de deletar.
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Excluir conta");
@@ -130,7 +130,7 @@ public class MainViewController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent() && result.get() == btYes){
+        if (result.isPresent() && result.get() == btYes) {
             System.out.println(ac);
 
             Connection conn = null;
@@ -166,13 +166,13 @@ public class MainViewController implements Initializable {
             String sql = "UPDATE Accounts SET NameTitle = ?, Login = ?, Password = ? WHERE NameTitle = ? AND Login = ? AND Password = ?";
             ps = conn.prepareStatement(sql);
 
-            ps.setString(1,newAc.getNameTitle());
-            ps.setString(2,newAc.getLogin());
-            ps.setString(3,newAc.getPassword());
+            ps.setString(1, newAc.getNameTitle());
+            ps.setString(2, newAc.getLogin());
+            ps.setString(3, newAc.getPassword());
 
-            ps.setString(4,oldAc.getNameTitle());
-            ps.setString(5,oldAc.getLogin());
-            ps.setString(6,oldAc.getPassword());
+            ps.setString(4, oldAc.getNameTitle());
+            ps.setString(5, oldAc.getLogin());
+            ps.setString(6, oldAc.getPassword());
 
             rowsAffected = ps.executeUpdate();
 
@@ -189,23 +189,40 @@ public class MainViewController implements Initializable {
 
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         int rowsAffected = 0;
 
+        // verificar se não existe uma conta com o mesmo titulo
         try {
             conn = DB_connection.getConnection();
-            String sql = "INSERT INTO Accounts (NameTitle, Login, Password) VALUES (?, ?, ?)";
-
+            String sql = "SELECT * FROM Accounts WHERE NameTitle = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, ac.getNameTitle());
-            ps.setString(2, ac.getLogin());
-            ps.setString(3, ac.getPassword());
+            rs = ps.executeQuery();
 
-            rowsAffected = ps.executeUpdate();
+            if (rs.next()) {
+                //Mostrar um alert Aqui
+                System.out.println("Já existe uma conta com este nome");
+            } else {
+                try {
+                    conn = DB_connection.getConnection();
+                    String sqlInset = "INSERT INTO Accounts (NameTitle, Login, Password) VALUES (?, ?, ?)";
+
+                    ps = conn.prepareStatement(sqlInset);
+                    ps.setString(1, ac.getNameTitle());
+                    ps.setString(2, ac.getLogin());
+                    ps.setString(3, ac.getPassword());
+
+                    rowsAffected = ps.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (rowsAffected > 0) reloadView();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        if (rowsAffected > 0) reloadView();
     }
 
     @FXML
@@ -246,7 +263,7 @@ public class MainViewController implements Initializable {
         }
 
         Collections.sort(accountList, Comparator.comparing(a -> a.getNameTitle().toLowerCase()));
-        
+
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
 
@@ -339,7 +356,7 @@ public class MainViewController implements Initializable {
                 dialog.showAndWait();
             });
 
-            btDelete.setOnAction(e ->{
+            btDelete.setOnAction(e -> {
                 System.out.println(account);
                 onBtDeleteAccountClick(account);
             });
@@ -347,7 +364,7 @@ public class MainViewController implements Initializable {
             Region spacer = new Region();
             spacer.setPrefWidth(20);
 
-            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit,btDelete);
+            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit, btDelete);
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
