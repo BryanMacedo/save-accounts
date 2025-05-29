@@ -2,6 +2,7 @@ package guiClasses.Controllers.MainViewDir;
 
 import DB.DB_connection;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -59,18 +60,14 @@ public class MainViewController implements Initializable {
         }
     }
 
-
     @FXML
     private void onBtAddClick() {
         Dialog<Account> dialog = new Dialog<>();
         dialog.setTitle("Adicionar Conta");
 
-        // tentar trocar esta parte por um hbox com um button
         ButtonType btAdd = new ButtonType("Adicionar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btAdd, ButtonType.CANCEL);
 
-        dialog.getDialogPane().getButtonTypes().addAll(btAdd);
-
-        // Campos do formulário
         TextField tfTitle = new TextField();
         tfTitle.setPromptText("Título");
 
@@ -90,32 +87,57 @@ public class MainViewController implements Initializable {
         hBoxLogin.getChildren().addAll(new Label("Login:"), tfLogin);
         hBoxPassword.getChildren().addAll(new Label("Senha:"), tfPassword);
 
-        List<HBox> hBoxList = new ArrayList<>(Arrays.asList(hBoxTitle, hBoxLogin, hBoxPassword));
-
-        for (HBox hBox : hBoxList) {
+        for (HBox hBox : Arrays.asList(hBoxTitle, hBoxLogin, hBoxPassword)) {
             hBox.setAlignment(Pos.CENTER);
         }
 
-        content.getChildren().addAll(
-                hBoxTitle,
-                hBoxLogin,
-                hBoxPassword
-        );
-
+        content.getChildren().addAll(hBoxTitle, hBoxLogin, hBoxPassword);
         dialog.getDialogPane().setContent(content);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == btAdd) {
-                if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
-                    return null;
-                Account ac = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
+        // Pega o botão Adicionar e impede o fechamento se a validação falhar
+        Node btAddNode = dialog.getDialogPane().lookupButton(btAdd);
+        btAddNode.addEventFilter(ActionEvent.ACTION, event -> {
+            String title = tfTitle.getText();
+            String login = tfLogin.getText();
+            String password = tfPassword.getText();
+
+            if (title.isEmpty() || login.isEmpty() || password.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Campos obrigatórios", "Preencha todos os campos.");
+                event.consume(); // impede o fechamento
+                return;
+            }
+
+            if (isTitleAlreadyUsed(title)) {
+                showAlert(Alert.AlertType.ERROR, "Título já utilizado", "Já existe uma conta com este título.");
+                event.consume(); // impede o fechamento
+            } else {
+                Account ac = new Account(title, login, password);
                 onBtAddAccountClick(ac);
             }
-            return null;
         });
 
         dialog.showAndWait();
     }
+
+    private boolean isTitleAlreadyUsed(String title) {
+        try (Connection conn = DB_connection.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM Accounts WHERE NameTitle = ?")) {
+            ps.setString(1, title);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 
     private void onBtDeleteAccountClick(Account ac) {
         // depois adicionar um aviso ao antes de deletar.
@@ -189,40 +211,23 @@ public class MainViewController implements Initializable {
 
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
         int rowsAffected = 0;
 
-        // verificar se não existe uma conta com o mesmo titulo
         try {
             conn = DB_connection.getConnection();
-            String sql = "SELECT * FROM Accounts WHERE NameTitle = ?";
-            ps = conn.prepareStatement(sql);
+            String sqlInset = "INSERT INTO Accounts (NameTitle, Login, Password) VALUES (?, ?, ?)";
+
+            ps = conn.prepareStatement(sqlInset);
             ps.setString(1, ac.getNameTitle());
-            rs = ps.executeQuery();
+            ps.setString(2, ac.getLogin());
+            ps.setString(3, ac.getPassword());
 
-            if (rs.next()) {
-                //Mostrar um alert Aqui
-                System.out.println("Já existe uma conta com este nome");
-            } else {
-                try {
-                    conn = DB_connection.getConnection();
-                    String sqlInset = "INSERT INTO Accounts (NameTitle, Login, Password) VALUES (?, ?, ?)";
-
-                    ps = conn.prepareStatement(sqlInset);
-                    ps.setString(1, ac.getNameTitle());
-                    ps.setString(2, ac.getLogin());
-                    ps.setString(3, ac.getPassword());
-
-                    rowsAffected = ps.executeUpdate();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-                if (rowsAffected > 0) reloadView();
-            }
+            rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        if (rowsAffected > 0) reloadView();
     }
 
     @FXML
