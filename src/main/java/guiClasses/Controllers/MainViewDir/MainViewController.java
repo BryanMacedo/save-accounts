@@ -298,6 +298,8 @@ public class MainViewController implements Initializable {
             Button btEdit = new Button("Editar");
             Button btDelete = new Button("Deletar");
 
+            btDelete.setStyle("-fx-margin: 10px;");
+
             btEdit.setOnAction(e -> {
                 System.out.println(account);
                 //editat o account no db
@@ -370,6 +372,8 @@ public class MainViewController implements Initializable {
             spacer.setPrefWidth(20);
 
             hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit, btDelete);
+
+            hBoxTitleArea.setMargin(btEdit, new Insets(0, 10, 0, 0));  // top, right, bottom, left
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
