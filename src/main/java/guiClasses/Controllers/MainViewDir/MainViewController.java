@@ -395,8 +395,15 @@ public class MainViewController implements Initializable {
             bt01.setGraphic(copyIconView01);
             bt02.setGraphic(copyIconView02);
 
+            //color: #595959
+            bt01.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
+            bt02.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
+
             hBox01.getChildren().addAll(labelLogintxt, labelLoginContent, bt01);
             hBox02.getChildren().addAll(labelPasswordtxt, labelPasswordContent, bt02);
+
+            hBox01.setAlignment(Pos.CENTER_LEFT);
+            hBox02.setAlignment(Pos.CENTER_LEFT);
 
             newVbox.getChildren().addAll(hBox01, hBox02);
 
