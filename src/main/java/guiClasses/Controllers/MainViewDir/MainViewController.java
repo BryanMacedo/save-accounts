@@ -295,10 +295,40 @@ public class MainViewController implements Initializable {
             HBox hBoxTitleArea = new HBox();
             hBoxTitleArea.setAlignment(Pos.CENTER);
             Label lbNameTile = new Label(account.getNameTitle());
-            Button btEdit = new Button("Editar");
-            Button btDelete = new Button("Deletar");
 
-            btDelete.setStyle("-fx-margin: 10px;");
+            Image editIcon = new Image(getClass().getResourceAsStream("/imgs/ic_edit.png"));
+            ImageView editIconView = new ImageView(editIcon);
+
+            editIconView.setFitWidth(22);
+            editIconView.setFitHeight(22);
+            editIconView.setPreserveRatio(true);
+
+            Button btEdit = new Button();
+            btEdit.setGraphic(editIconView);
+
+            btEdit.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
+
+            btEdit.setMaxWidth(Double.MAX_VALUE);
+            btEdit.setMinWidth(Region.USE_PREF_SIZE);
+            btEdit.setPrefWidth(Region.USE_COMPUTED_SIZE);
+
+            Image deleteIcon = new Image(getClass().getResourceAsStream("/imgs/ic_delete.png"));
+            ImageView deleteIconView = new ImageView(deleteIcon);
+
+            deleteIconView.setFitWidth(20);
+            deleteIconView.setFitHeight(20);
+            deleteIconView.setPreserveRatio(true);
+
+            Button btDelete = new Button();
+            btDelete.setGraphic(deleteIconView);
+
+            btDelete.setMaxWidth(Double.MAX_VALUE);
+            btDelete.setMinWidth(Region.USE_PREF_SIZE);
+            btDelete.setPrefWidth(Region.USE_COMPUTED_SIZE);
+
+            btDelete.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
+
+            //btDelete.setStyle("-fx-margin: 10px;");
 
             btEdit.setOnAction(e -> {
                 System.out.println(account);
@@ -369,11 +399,9 @@ public class MainViewController implements Initializable {
             });
 
             Region spacer = new Region();
-            spacer.setPrefWidth(20);
+            spacer.setPrefWidth(5);
 
             hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit, btDelete);
-
-            hBoxTitleArea.setMargin(btEdit, new Insets(0, 10, 0, 0));  // top, right, bottom, left
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
@@ -387,7 +415,7 @@ public class MainViewController implements Initializable {
             copyIconView01.setFitHeight(20);
             copyIconView01.setPreserveRatio(true);
 
-            ImageView copyIconView02 = new ImageView(copyIcon); // Nova instância
+            ImageView copyIconView02 = new ImageView(copyIcon);
             copyIconView02.setFitWidth(20);
             copyIconView02.setFitHeight(20);
             copyIconView02.setPreserveRatio(true);
@@ -407,7 +435,6 @@ public class MainViewController implements Initializable {
 
             newVbox.getChildren().addAll(hBox01, hBox02);
 
-            //newTitledPane.setText(account.getNameTitle());
             newTitledPane.setContent(newVbox);
 
             accordionMain.getPanes().add(newTitledPane);
