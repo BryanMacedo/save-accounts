@@ -35,6 +35,7 @@ public class MainViewController implements Initializable {
     private HBox hBoxLogin = new HBox();
     private HBox hBoxPassword = new HBox();
     private Button btAddAccount;
+    private Button btAdd;
 
     @FXML
     private Accordion accordionMain;
@@ -46,7 +47,7 @@ public class MainViewController implements Initializable {
     private VBox vbAccordion;
 
     @FXML
-    private Button btAdd;
+    private Button btAddUI;
 
     private void reloadView() {
         try {
@@ -248,6 +249,16 @@ public class MainViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+
+        btAddUI.setOnMouseEntered(event -> {
+            btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-scale-x: 1.06; -fx-scale-y: 1.06;");
+        });
+
+        btAddUI.setOnMouseExited(event -> {
+            btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+        });
+
         List<Account> accountList = new ArrayList<>();
         Connection conn = null;
         PreparedStatement st = null;
