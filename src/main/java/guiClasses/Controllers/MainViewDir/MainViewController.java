@@ -274,6 +274,7 @@ public class MainViewController implements Initializable {
 
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
+            newTitledPane.setStyle("-fx-font-weight: Bold;");
 
             Label labelLogintxt = new Label();
             Label labelPasswordtxt = new Label();
