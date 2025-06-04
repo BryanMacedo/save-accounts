@@ -36,7 +36,7 @@
                <children>
                   <Button fx:id="btAddUI" mnemonicParsing="false" onAction="#onBtAddClick" text="Adicionar nova conta">
                      <HBox.margin>
-                        <Insets right="10.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">

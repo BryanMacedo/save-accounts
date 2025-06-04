@@ -249,15 +249,7 @@ public class MainViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
-
-        btAddUI.setOnMouseEntered(event -> {
-            btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-scale-x: 1.06; -fx-scale-y: 1.06;");
-        });
-
-        btAddUI.setOnMouseExited(event -> {
-            btAddUI.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
-        });
+        btAddUI.setStyle("-fx-cursor: hand;");
 
         List<Account> accountList = new ArrayList<>();
         Connection conn = null;
