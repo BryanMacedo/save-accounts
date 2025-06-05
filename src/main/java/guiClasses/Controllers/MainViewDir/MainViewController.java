@@ -303,14 +303,12 @@ public class MainViewController implements Initializable {
             Image editIcon = new Image(getClass().getResourceAsStream("/imgs/ic_edit.png"));
             ImageView editIconView = new ImageView(editIcon);
 
-            editIconView.setFitWidth(22);
-            editIconView.setFitHeight(22);
+            editIconView.setFitWidth(20);
+            editIconView.setFitHeight(20);
             editIconView.setPreserveRatio(true);
 
             Button btEdit = new Button();
             btEdit.setGraphic(editIconView);
-
-            btEdit.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
 
             btEdit.setMaxWidth(Double.MAX_VALUE);
             btEdit.setMinWidth(Region.USE_PREF_SIZE);
@@ -329,10 +327,6 @@ public class MainViewController implements Initializable {
             btDelete.setMaxWidth(Double.MAX_VALUE);
             btDelete.setMinWidth(Region.USE_PREF_SIZE);
             btDelete.setPrefWidth(Region.USE_COMPUTED_SIZE);
-
-            btDelete.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
-
-            //btDelete.setStyle("-fx-margin: 10px;");
 
             btEdit.setOnAction(e -> {
                 System.out.println(account);
@@ -402,10 +396,13 @@ public class MainViewController implements Initializable {
                 onBtDeleteAccountClick(account);
             });
 
-            Region spacer = new Region();
-            spacer.setPrefWidth(5);
+            Region spacer01 = new Region();
+            spacer01.setPrefWidth(10);
 
-            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer, btEdit, btDelete);
+            Region spacer02 = new Region();
+            spacer02.setPrefWidth(10);
+
+            hBoxTitleArea.getChildren().addAll(lbNameTile, spacer01, btEdit, spacer02, btDelete);
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
