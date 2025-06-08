@@ -19,6 +19,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.entities.Account;
 
 import java.io.IOException;
@@ -116,6 +117,9 @@ public class MainViewController implements Initializable {
                 onBtAddAccountClick(ac);
             }
         });
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/imgs/ic_app.png")));
 
         dialog.showAndWait();
     }
@@ -390,6 +394,9 @@ public class MainViewController implements Initializable {
                     }
                     return null;
                 });
+
+                Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/imgs/ic_app.png")));
 
                 dialog.showAndWait();
             });
