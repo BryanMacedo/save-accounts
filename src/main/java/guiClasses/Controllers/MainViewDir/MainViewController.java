@@ -140,6 +140,8 @@ public class MainViewController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/imgs/ic_app.png")));
         alert.showAndWait();
     }
 
