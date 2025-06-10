@@ -210,7 +210,6 @@ public class MainViewController implements Initializable {
         }
 
         if (rowsAffected > 0) reloadView();
-
     }
 
     private void onBtAddAccountClick(Account ac) {
@@ -345,9 +344,9 @@ public class MainViewController implements Initializable {
                 dialog.setTitle("Editar Conta");
 
                 // tentar trocar esta parte por um hbox com um button
-                ButtonType btAdd = new ButtonType("Editar", ButtonBar.ButtonData.OK_DONE);
+                ButtonType btEditDialog = new ButtonType("Editar", ButtonBar.ButtonData.OK_DONE);
 
-                dialog.getDialogPane().getButtonTypes().addAll(btAdd);
+                dialog.getDialogPane().getButtonTypes().addAll(btEditDialog, ButtonType.CANCEL);
 
                 // Campos do formulário
                 TextField tfTitle = new TextField();
@@ -386,15 +385,41 @@ public class MainViewController implements Initializable {
 
                 dialog.getDialogPane().setContent(content);
 
-                dialog.setResultConverter(dialogButton -> {
-                    if (dialogButton == btAdd) {
-                        if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
-                            return null;
-                        Account newAc = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
-                        //onBtAddAccountClick(ac);
+//                dialog.setResultConverter(dialogButton -> {
+//                    if (dialogButton == btEditDialog) {
+//                        if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
+//                            return null;
+//                        Account newAc = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
+//                        onBtEditAccountClick(account, newAc);
+//                    }
+//                    return null;
+//                });
+
+                Node btAddNode = dialog.getDialogPane().lookupButton(btEditDialog);
+                btAddNode.addEventFilter(ActionEvent.ACTION, event -> {
+                    String title = tfTitle.getText();
+                    String login = tfLogin.getText();
+                    String password = tfPassword.getText();
+
+                    if (title.isEmpty() || login.isEmpty() || password.isEmpty()) {
+                        showAlert(Alert.AlertType.WARNING, "Campos obrigatórios", "Preencha todos os campos.");
+                        event.consume();
+                        return;
+                    }
+
+                    if (account.getNameTitle().equals(title) && account.getLogin().equals(login) && account.getPassword().equals(password)){
+                        showAlert(Alert.AlertType.WARNING, "Campos não editados", "Edite ao menos um dos campos.");
+                        event.consume();
+                        return;
+                    }
+
+                    if (isTitleAlreadyUsed(title) && !title.equals(account.getNameTitle())) {
+                        showAlert(Alert.AlertType.ERROR, "Título já utilizado", "Já existe uma conta com este título.");
+                        event.consume();
+                    } else {
+                        Account newAc = new Account(title, login, password);
                         onBtEditAccountClick(account, newAc);
                     }
-                    return null;
                 });
 
                 Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
