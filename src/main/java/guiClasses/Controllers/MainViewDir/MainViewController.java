@@ -152,6 +152,8 @@ public class MainViewController implements Initializable {
         alert.setTitle("Excluir conta");
         alert.setHeaderText("Confirmar Exclusão");
         alert.setContentText("Tem certeza que deseja excluir a conta \"" + ac.getNameTitle() + "\"?");
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/imgs/ic_app.png")));
 
         ButtonType btYes = new ButtonType("Sim");
         ButtonType btNo = new ButtonType("Não");
@@ -180,6 +182,7 @@ public class MainViewController implements Initializable {
 
             if (rowsAffected > 0) reloadView();
         }
+
     }
 
     private void onBtEditAccountClick(Account oldAc, Account newAc) {
@@ -385,16 +388,6 @@ public class MainViewController implements Initializable {
 
                 dialog.getDialogPane().setContent(content);
 
-//                dialog.setResultConverter(dialogButton -> {
-//                    if (dialogButton == btEditDialog) {
-//                        if (tfTitle.getText().isEmpty() || tfLogin.getText().isEmpty() || tfPassword.getText().isEmpty())
-//                            return null;
-//                        Account newAc = new Account(tfTitle.getText(), tfLogin.getText(), tfPassword.getText());
-//                        onBtEditAccountClick(account, newAc);
-//                    }
-//                    return null;
-//                });
-
                 Node btAddNode = dialog.getDialogPane().lookupButton(btEditDialog);
                 btAddNode.addEventFilter(ActionEvent.ACTION, event -> {
                     String title = tfTitle.getText();
@@ -431,6 +424,7 @@ public class MainViewController implements Initializable {
             btDelete.setOnAction(e -> {
                 System.out.println(account);
                 onBtDeleteAccountClick(account);
+
             });
 
             Region spacer01 = new Region();
