@@ -17,7 +17,7 @@
          <content>
             <VBox fx:id="vbAccordion" prefHeight="485.0" prefWidth="319.0">
                <children>
-                  <Accordion fx:id="accordionMain" />
+                  <Accordion fx:id="accordionMain" focusTraversable="false" />
                </children>
             </VBox>
          </content>

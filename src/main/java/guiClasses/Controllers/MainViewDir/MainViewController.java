@@ -282,6 +282,7 @@ public class MainViewController implements Initializable {
 
         for (Account account : accountList) {
             TitledPane newTitledPane = new TitledPane();
+            newTitledPane.setFocusTraversable(false);
             newTitledPane.setStyle("-fx-font-weight: Bold;");
 
             Label labelLogintxt = new Label();
@@ -319,6 +320,7 @@ public class MainViewController implements Initializable {
             editIconView.setPreserveRatio(true);
 
             Button btEdit = new Button();
+            btEdit.setFocusTraversable(false);
             btEdit.setGraphic(editIconView);
 
             btEdit.setMaxWidth(Double.MAX_VALUE);
@@ -333,6 +335,7 @@ public class MainViewController implements Initializable {
             deleteIconView.setPreserveRatio(true);
 
             Button btDelete = new Button();
+            btDelete.setFocusTraversable(false);
             btDelete.setGraphic(deleteIconView);
 
             btDelete.setMaxWidth(Double.MAX_VALUE);
