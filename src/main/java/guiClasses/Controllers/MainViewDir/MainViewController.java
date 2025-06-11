@@ -96,7 +96,6 @@ public class MainViewController implements Initializable {
         content.getChildren().addAll(hBoxTitle, hBoxLogin, hBoxPassword);
         dialog.getDialogPane().setContent(content);
 
-        // Pega o botão Adicionar e impede o fechamento se a validação falhar
         Node btAddNode = dialog.getDialogPane().lookupButton(btAdd);
         btAddNode.addEventFilter(ActionEvent.ACTION, event -> {
             String title = tfTitle.getText();
@@ -111,7 +110,7 @@ public class MainViewController implements Initializable {
 
             if (isTitleAlreadyUsed(title)) {
                 showAlert(Alert.AlertType.ERROR, "Título já utilizado", "Já existe uma conta com este título.");
-                event.consume(); // impede o fechamento
+                event.consume();
             } else {
                 Account ac = new Account(title, login, password);
                 onBtAddAccountClick(ac);
@@ -147,7 +146,6 @@ public class MainViewController implements Initializable {
 
 
     private void onBtDeleteAccountClick(Account ac) {
-        // depois adicionar um aviso ao antes de deletar.
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Excluir conta");
         alert.setHeaderText("Confirmar Exclusão");
@@ -162,8 +160,6 @@ public class MainViewController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == btYes) {
-            System.out.println(ac);
-
             Connection conn = null;
             PreparedStatement ps = null;
             int rowsAffected = 0;
@@ -186,9 +182,6 @@ public class MainViewController implements Initializable {
     }
 
     private void onBtEditAccountClick(Account oldAc, Account newAc) {
-        System.out.println(oldAc);
-        System.out.println(newAc);
-
         Connection conn = null;
         PreparedStatement ps = null;
         int rowsAffected = 0;
@@ -216,8 +209,6 @@ public class MainViewController implements Initializable {
     }
 
     private void onBtAddAccountClick(Account ac) {
-        System.out.println(ac);
-
         Connection conn = null;
         PreparedStatement ps = null;
         int rowsAffected = 0;
@@ -343,13 +334,9 @@ public class MainViewController implements Initializable {
             btDelete.setPrefWidth(Region.USE_COMPUTED_SIZE);
 
             btEdit.setOnAction(e -> {
-                System.out.println(account);
-                //editat o account no db
-
                 Dialog<Account> dialog = new Dialog<>();
                 dialog.setTitle("Editar Conta");
 
-                // tentar trocar esta parte por um hbox com um button
                 ButtonType btEditDialog = new ButtonType("Editar", ButtonBar.ButtonData.OK_DONE);
 
                 dialog.getDialogPane().getButtonTypes().addAll(btEditDialog, ButtonType.CANCEL);
@@ -425,9 +412,7 @@ public class MainViewController implements Initializable {
             });
 
             btDelete.setOnAction(e -> {
-                System.out.println(account);
                 onBtDeleteAccountClick(account);
-
             });
 
             Region spacer01 = new Region();
@@ -443,8 +428,7 @@ public class MainViewController implements Initializable {
             labelPasswordContent.setText(account.getPassword());
 
             Image copyIcon = new Image(getClass().getResourceAsStream("/imgs/ic_copy.png"));
-
-
+            
             ImageView copyIconView01 = new ImageView(copyIcon);
             copyIconView01.setFitWidth(20);
             copyIconView01.setFitHeight(20);
