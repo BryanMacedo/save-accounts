@@ -34,7 +34,7 @@
          <children>
             <HBox prefWidth="200.0">
                <children>
-                  <Button fx:id="btAddUI" mnemonicParsing="false" onAction="#onBtAddClick" text="Adicionar nova conta">
+                  <Button fx:id="btAddUI" focusTraversable="false" mnemonicParsing="false" onAction="#onBtAddClick" text="Adicionar nova conta">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

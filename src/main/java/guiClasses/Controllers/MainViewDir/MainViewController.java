@@ -476,6 +476,7 @@ public class MainViewController implements Initializable {
 
         Label lbWarning = new Label();
         lbWarning.setText("Sem dados.");
+        lbWarning.setStyle("-fx-font-weight: Bold;");
 
         if (isEmpty) {
             vbAccordion.setAlignment(Pos.CENTER);
