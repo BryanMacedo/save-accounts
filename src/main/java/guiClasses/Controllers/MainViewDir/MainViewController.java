@@ -309,6 +309,9 @@ public class MainViewController implements Initializable {
             HBox hBoxTitleArea = new HBox();
             hBoxTitleArea.setAlignment(Pos.CENTER);
             Label lbNameTile = new Label(account.getNameTitle());
+            lbNameTile.setMaxWidth(195);
+            lbNameTile.setMinWidth(195);
+            lbNameTile.setPrefWidth(195);
 
             Image editIcon = new Image(getClass().getResourceAsStream("/imgs/ic_edit.png"));
             ImageView editIconView = new ImageView(editIcon);
