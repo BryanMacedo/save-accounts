@@ -293,11 +293,18 @@ public class MainViewController implements Initializable {
             HBox hBox01 = new HBox();
             HBox hBox02 = new HBox();
 
-            labelLogintxt.setText("LOGIN: ");
-            labelPasswordtxt.setText("SENHA: ");
+            labelLogintxt.setText("LOGIN  ->  ");
+            labelPasswordtxt.setText("SENHA  ->  ");
 
             labelLogintxt.setStyle("-fx-font-size: 13px");
+            labelLogintxt.setMinWidth(73);
+            labelLogintxt.setMaxWidth(73);
+            labelLogintxt.setPrefWidth(73);
+
             labelPasswordtxt.setStyle("-fx-font-size: 13px");
+            labelPasswordtxt.setMinWidth(73);
+            labelPasswordtxt.setMaxWidth(73);
+            labelPasswordtxt.setPrefWidth(73);
 
             HBox hBoxTitleArea = new HBox();
             hBoxTitleArea.setAlignment(Pos.CENTER);
