@@ -1,0 +1,1 @@
+java --module-path "C:\java-libs\javafx-sdk-17\lib" --add-modules javafx.controls,javafx.fxml -jar "D:\java-estudos\save-accounts\out\artifacts\save_accounts_jar\save-accounts.jar"
