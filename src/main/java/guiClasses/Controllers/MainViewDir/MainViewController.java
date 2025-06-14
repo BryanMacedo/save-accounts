@@ -174,6 +174,9 @@ public class MainViewController implements Initializable {
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+            }finally {
+                DB_connection.closeStatement(ps);
+                DB_connection.closeConnection(conn);
             }
 
             if (rowsAffected > 0) reloadView();
@@ -203,6 +206,9 @@ public class MainViewController implements Initializable {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally {
+            DB_connection.closeStatement(ps);
+            DB_connection.closeConnection(conn);
         }
 
         if (rowsAffected > 0) reloadView();
@@ -225,6 +231,9 @@ public class MainViewController implements Initializable {
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally {
+            DB_connection.closeStatement(ps);
+            DB_connection.closeConnection(conn);
         }
 
         if (rowsAffected > 0) reloadView();
@@ -267,6 +276,10 @@ public class MainViewController implements Initializable {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally {
+            DB_connection.closeStatement(st);
+            DB_connection.closeResultSet(rs);
+            DB_connection.closeConnection(conn);
         }
 
         Collections.sort(accountList, Comparator.comparing(a -> a.getNameTitle().toLowerCase()));
