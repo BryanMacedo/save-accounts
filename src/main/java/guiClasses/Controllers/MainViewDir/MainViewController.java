@@ -174,7 +174,7 @@ public class MainViewController implements Initializable {
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
-            }finally {
+            } finally {
                 DB_connection.closeStatement(ps);
                 DB_connection.closeConnection(conn);
             }
@@ -206,7 +206,7 @@ public class MainViewController implements Initializable {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             DB_connection.closeStatement(ps);
             DB_connection.closeConnection(conn);
         }
@@ -231,7 +231,7 @@ public class MainViewController implements Initializable {
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             DB_connection.closeStatement(ps);
             DB_connection.closeConnection(conn);
         }
@@ -276,7 +276,7 @@ public class MainViewController implements Initializable {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             DB_connection.closeStatement(st);
             DB_connection.closeResultSet(rs);
             DB_connection.closeConnection(conn);
@@ -413,7 +413,7 @@ public class MainViewController implements Initializable {
                         return;
                     }
 
-                    if (account.getNameTitle().equals(title) && account.getLogin().equals(login) && account.getPassword().equals(password)){
+                    if (account.getNameTitle().equals(title) && account.getLogin().equals(login) && account.getPassword().equals(password)) {
                         showAlert(Alert.AlertType.WARNING, "Campos não editados", "Edite ao menos um dos campos.");
                         event.consume();
                         return;
@@ -448,10 +448,12 @@ public class MainViewController implements Initializable {
 
             newTitledPane.setGraphic(hBoxTitleArea);
             labelLoginContent.setText(account.getLogin());
+            labelLoginContent.setStyle("-fx-font-size: 11px; -fx-margin: 0 5 0 0;");
             labelPasswordContent.setText(account.getPassword());
+            labelPasswordContent.setStyle("-fx-font-size: 11px");
 
             Image copyIcon = new Image(getClass().getResourceAsStream("/imgs/ic_copy.png"));
-            
+
             ImageView copyIconView01 = new ImageView(copyIcon);
             copyIconView01.setFitWidth(20);
             copyIconView01.setFitHeight(20);
@@ -466,11 +468,18 @@ public class MainViewController implements Initializable {
             bt02.setGraphic(copyIconView02);
 
             //color: #595959
-            bt01.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
-            bt02.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-cursor: hand;");
+            bt01.setStyle("-fx-cursor: hand;");
+            bt02.setStyle("-fx-cursor: hand;");
 
-            hBox01.getChildren().addAll(labelLogintxt, labelLoginContent, bt01);
-            hBox02.getChildren().addAll(labelPasswordtxt, labelPasswordContent, bt02);
+            Region spacerLogin = new Region();
+            spacerLogin.setPrefWidth(10);
+
+            Region spacerPassword = new Region();
+            spacerPassword.setPrefWidth(10);
+
+            hBox01.getChildren().addAll(labelLogintxt, labelLoginContent, spacerLogin, bt01);
+            hBox02.getChildren().addAll(labelPasswordtxt, labelPasswordContent,spacerPassword, bt02);
+
 
             hBox01.setAlignment(Pos.CENTER_LEFT);
             hBox02.setAlignment(Pos.CENTER_LEFT);
